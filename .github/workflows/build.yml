@@ -122,8 +122,8 @@ jobs:
       - name: Checkout Picasso repository for utility scripts
         uses: actions/checkout@v4
         with:
-          repository: edunext/picasso
-          ref: ${{ inputs.PICASSO_VERSION }}
+          repository: open-craft/picasso
+          ref: kaustav/new_ghcr_test
           path: picasso
 
       - name: Checkout strains repository for build configurations
