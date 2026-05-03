@@ -115,7 +115,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: open-craft/picasso
-          ref: kaustav/new_ghcr_test
+          ref: ${{ inputs.PICASSO_VERSION }}
           path: picasso
 
       - name: Checkout strains repository for build configurations
