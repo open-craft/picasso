@@ -24,4 +24,6 @@ service_tag_map = {
   "license-manager": "LICENSE_MANAGER_DOCKER_IMAGE",
   "license-manager-worker": "LICENSE_MANAGER_WORKER_DOCKER_IMAGE",
   "license-manager-bulk-enrollment-worker": "LICENSE_MANAGER_BULK_ENROLLMENT_WORKER_DOCKER_IMAGE",
+  "codejail": "CODEJAIL_DOCKER_IMAGE_V2",
+  "codejail_apparmor": "CODEJAIL_APPARMOR_DOCKER_IMAGE",
 }
