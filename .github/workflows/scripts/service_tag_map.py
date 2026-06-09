@@ -12,8 +12,8 @@ Values:
 service_tag_map = {
   "openedx": "DOCKER_IMAGE_OPENEDX",
   "mfe": "MFE_DOCKER_IMAGE",
-  "aspects": "DOCKER_IMAGE_ASPECTS",
   "aspects-superset": "DOCKER_IMAGE_SUPERSET",
+  "aspects": "DOCKER_IMAGE_ASPECTS",
   "discovery": "DISCOVERY_DOCKER_IMAGE",
   "ecommerce": "ECOMMERCE_DOCKER_IMAGE",
   "ecommerce-worker": "ECOMMERCE_WORKER_DOCKER_IMAGE",
