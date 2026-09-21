@@ -14,5 +14,6 @@ service_tag_map = {
   "openedx": "DOCKER_IMAGE_OPENEDX",
   "mfe": "MFE_DOCKER_IMAGE",
   "notes": "NOTES_DOCKER_IMAGE",
+  "codejail": "CODEJAIL_DOCKER_IMAGE_V2",
   "aspects-superset": "DOCKER_IMAGE_SUPERSET"
 }
