@@ -288,21 +288,36 @@ jobs:
         env:
           CONFIG_FILE: ${{ inputs.STRAIN_PATH }}/config.yml
           SERVICE: ${{ inputs.SERVICE }}
+          BRANCH: ${{ inputs.STRAIN_REPOSITORY_BRANCH }}
           SCRIPT_PATH: ../picasso/.github/workflows/scripts/dynamic_image_tag.py
+          MAX_ATTEMPTS: 10
         run: |
-          git config user.name "GitHub Actions" 
+          git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git stash
-          git pull origin ${{ inputs.STRAIN_REPOSITORY_BRANCH }}
-          python $SCRIPT_PATH \
-            --config-file ../strains/"$CONFIG_FILE" \
-            --service "$SERVICE" \
-            --save-config "true" \
-            --image-tag "$DYNAMIC_IMAGE_TAG"
-          git add $CONFIG_FILE
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "chore: update service: ${{ inputs.SERVICE }} image"
-            git push
-          fi
+
+          # Multiple builds may update the same branch concurrently, so the push can be rejected.
+          # On each attempt, start from the latest remote state and re-apply the change instead of
+          # rebasing, as the whole config file is rewritten and rebasing would likely conflict.
+          for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            python $SCRIPT_PATH \
+              --config-file ../strains/"$CONFIG_FILE" \
+              --service "$SERVICE" \
+              --save-config "true" \
+              --image-tag "$DYNAMIC_IMAGE_TAG"
+            git add "$CONFIG_FILE"
+            if git diff --cached --quiet; then
+              echo "No changes to commit"
+              exit 0
+            fi
+            git commit -m "chore: update service: $SERVICE image"
+            if git push origin HEAD:"$BRANCH"; then
+              exit 0
+            fi
+            delay=$(( attempt * 2 + RANDOM % 10 ))
+            echo "Push failed (attempt $attempt/$MAX_ATTEMPTS). Retrying in ${delay}s..."
+            sleep "$delay"
+          done
+          echo "Failed to push the updated image tag after $MAX_ATTEMPTS attempts."
+          exit 1
